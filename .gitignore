@@ -221,3 +221,26 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- fdx-open-banking ---
+# Secrets / local config
+.env
+.env.*
+!.env.example
+.local/
+.isaac/
+# Databricks bundle state
+.databricks/
+# Downloaded third-party specs and sources (fetched, not committed)
+vendor/
+# uv.lock is not committed: local resolution goes through a private index
+# whose URLs would be baked into the lock. CI resolves from PyPI. See lessons.md.
+uv.lock
+# direnv / devenv (.envrc itself is committed; the template above ignores it)
+!.envrc
+.direnv/
+.devenv/
+.devenv.flake.nix
+devenv.local.nix
+# worktrunk / jj
+.worktrees/
