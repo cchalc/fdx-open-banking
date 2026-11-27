@@ -1,0 +1,26 @@
+# Databricks Asset Bundle for the FDX open-banking lakehouse.
+# Public repo: name a CLI profile only, never a workspace host.
+bundle:
+  name: fdx_open_banking
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: >
+      Unity Catalog catalog that holds the schema. No default on purpose: set it with
+      BUNDLE_VAR_catalog=<catalog> or --var catalog=<catalog>.
+  schema:
+    description: Schema for the volume and all pipeline tables.
+    default: fdx_open_banking
+  raw_volume:
+    description: Volume the landing step (fdx_open_banking.land) writes NDJSON into.
+    default: fdx_raw
+
+targets:
+  dev:
+    mode: development # prefixes resource names with dev_<user>_ / [dev <user>]
+    default: true
+    workspace:
+      profile: fevm-cjc
