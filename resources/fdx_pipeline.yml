@@ -1,0 +1,15 @@
+resources:
+  pipelines:
+    fdx_open_banking:
+      name: fdx_open_banking
+      catalog: ${var.catalog}
+      schema: ${resources.schemas.fdx.name}
+      serverless: true
+      continuous: false # explicit: continuous retries failed updates forever
+      root_path: ../src/pipelines/fdx_open_banking
+      libraries:
+        - glob:
+            include: ../src/pipelines/fdx_open_banking/transformations/**
+      configuration:
+        # Read by bronze_fdx_records.sql as ${fdx.raw_path}
+        fdx.raw_path: /Volumes/${var.catalog}/${resources.schemas.fdx.name}/${var.raw_volume}/fdx/

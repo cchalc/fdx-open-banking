@@ -10,12 +10,15 @@ Keyed to GitHub issues. Branch per issue: `cchalc/#N-desc` off `dev`.
 
 ## Next
 - [ ] Run the mocks end to end under podman: seed → fetch → land.
-- [ ] `databricks bundle validate -t dev` (profile `fevm-cjc`), then deploy once the owner approves.
+- [ ] First `just bundle-deploy` and pipeline run (needs the catalog and owner approval).
+  `bundle validate` already passes.
 - [ ] Consent-story notebook: scopes → data categories, time-bound consent, revocation.
 - [ ] Gold layer: spend by category, daily balances. Add an AI/BI dashboard on top.
 
 ## Decisions for the owner
 - [ ] Pick a license (no LICENSE file yet; the repo is public).
+- [ ] Pick the Unity Catalog catalog on fevm-cjc for the bundle (`BUNDLE_VAR_catalog`). The
+  dev schema becomes `dev_<user>_fdx_open_banking`.
 - [ ] Optional: dbdemos usage tracking for any app or dashboard this demo ships.
 - [ ] Optional: a second ingest source, the Chariot FDX v6 sandbox (needs credentials).
 
