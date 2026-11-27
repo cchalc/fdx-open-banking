@@ -48,3 +48,9 @@ seeding and landing code is covered by respx tests in the meantime.
 - Client-credentials tokens carry no `account_id` claim. Account data needs the
   auth-code + consent flow (`just login`).
 **Do:** keep the client tolerant of both shapes; the tests cover both.
+
+## 2026-11-27: jj bookmark names with `#` must be quoted
+`jj bookmark create cchalc/#1-x` fails with a revset syntax error. **Do:** quote the name as a
+string literal: `jj bookmark create '"cchalc/#1-x"' -r @`, and the same for
+`jj git push --bookmark '"..."'`. jj doesn't run git hooks, so the commit-msg format and SSH
+signing aren't applied to jj commits. Format the subject by hand; jj commits are unsigned.
