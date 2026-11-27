@@ -1,0 +1,44 @@
+# Mastercard FDX mock auth + resource servers (Apache-2.0), built from pinned upstream
+# sources in vendor/ (`just mocks-fetch`). No upstream images are published.
+# Runbook, gotchas and sources: docs/research/mock-servers.md
+name: fdx-mock
+
+services:
+  fdx-auth:
+    build:
+      context: ../vendor/Fdx-Mock-Auth-Server
+    image: localhost/fdx-mock-auth-server:local
+    ports:
+      - "8080:8080"
+    environment:
+      # Token issuer (iss) stays localhost so host-side clients and the RS agree on it.
+      MOCK_AUTH_SERVER_BASEURL: http://localhost:8080
+      MOCK_AUTH_SERVER_BASESECUREURL: http://localhost:8080
+      MOCK_AUTH_SERVER_CONSENT_URI: http://localhost:8080/consent
+      # AS -> RS calls go over the compose network.
+      MOCK_RES_SERVER_BASEURL: http://fdx-resource:9090
+      MOCK_RES_SERVER_USERURL: http://fdx-resource:9090/user
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+
+  fdx-resource:
+    build:
+      context: ../vendor/Fdx-Mock-Resource-Server
+    image: localhost/fdx-mock-resource-server:local
+    ports:
+      - "9090:9090"
+    environment:
+      # RS fetches JWKS from the AS service name, but expects the localhost issuer.
+      MOCK_AUTH_SERVER_URL: http://fdx-auth:8080
+      MOCK_AUTH_ISSUER_URL: http://localhost:8080
+    depends_on:
+      fdx-auth:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9090/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
